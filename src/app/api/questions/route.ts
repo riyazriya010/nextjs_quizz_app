@@ -78,3 +78,83 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Error fetching questions' }, { status: 500 });
   }
 }
+
+
+
+
+
+export async function POST(req: Request) {
+  try {
+    // Parse the incoming data
+    const body = await req.json();
+    const { category, difficulty, question, options, correct_answer } = body;
+
+    // Validate the input data
+    if (!category || !difficulty || !question || !options || !correct_answer) {
+      return NextResponse.json(
+        { error: 'All fields (category, difficulty, question, options, correct_answer) are required.' },
+        { status: 400 }
+      );
+    }
+
+    // Connect to MongoDB
+    const { db } = await connectToDatabase();
+
+    // Find or create the category
+    const existingCategory = await db.collection('quiz').findOne({ category });
+
+    if (!existingCategory) {
+      // If the category doesn't exist, create a new category with the question
+      await db.collection('quiz').insertOne({
+        category,
+        questions: [
+          {
+            difficulty,
+            questions: [
+              {
+                question,
+                options,
+                correct_answer,
+              },
+            ],
+          },
+        ],
+      });
+    } else {
+      // If the category exists, update it
+      const existingDifficulty = existingCategory.questions.find(
+        (d: any) => d.difficulty === difficulty
+      );
+
+      if (existingDifficulty) {
+        // Append to the existing difficulty's questions
+        await db.collection('quiz').updateOne(
+          { category, 'questions.difficulty': difficulty },
+          {
+            $push: {
+              'questions.$.questions': { question, options, correct_answer },
+            },
+          }
+        );
+      } else {
+        // Add a new difficulty to the existing category
+        await db.collection('quiz').updateOne(
+          { category },
+          {
+            $push: {
+              questions: {
+                difficulty,
+                questions: [{ question, options, correct_answer }],
+              },
+            },
+          }
+        );
+      }
+    }
+
+    return NextResponse.json({ message: 'Quiz question added successfully.' }, { status: 201 });
+  } catch (error) {
+    console.error('Error adding quiz question:', error);
+    return NextResponse.json({ error: 'Error adding quiz question.' }, { status: 500 });
+  }
+}
