@@ -13,7 +13,7 @@ const Login = () => {
     // Check if admin is already logged in
     const isAuthenticated = localStorage.getItem("admin-authenticated");
     if (isAuthenticated) {
-      router.push("/pages/admin-dashboard");
+      router.push("/pages/admin/dashboard");
     }
   }, [router]);
 
@@ -25,7 +25,7 @@ const Login = () => {
 
     if (email === adminEmail && password === adminPassword) {
       localStorage.setItem("admin-authenticated", "true"); // Save authentication status
-      router.push("/pages/admin-dashboard");
+      router.push("/pages/admin/dashboard");
     } else {
       setError("Invalid credentials, please try again.");
     }

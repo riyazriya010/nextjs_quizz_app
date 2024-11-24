@@ -34,7 +34,7 @@ const Start = () => {
       if (response.ok) {
         // Store the questions and navigate to the quiz page
         sessionStorage.setItem("questions", JSON.stringify(result)); // Use session storage to keep questions in session
-        router.push("/pages/questions-page");
+        router.push("/pages/user/questions-page");
       } else {
         console.error("Failed to fetch data:", result);
       }

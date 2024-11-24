@@ -121,7 +121,7 @@ const Quiz = () => {
       setCorrectAnswer(""); // Clear the correct answer for the next question
     } else {
       sessionStorage.setItem("score", JSON.stringify(score)); // Save score in session
-      router.push("/pages/score-page");
+      router.push("/pages/user/score-page");
     }
   };
 

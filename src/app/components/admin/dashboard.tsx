@@ -16,7 +16,7 @@ const Dashboard = () => {
     // Check if admin is logged in
     const isAuthenticated = localStorage.getItem("admin-authenticated");
     if (!isAuthenticated) {
-      router.push("/pages/admin-login");
+      router.push("/pages/admin/login");
     }
   }, [router]);
 
@@ -73,7 +73,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("admin-authenticated");
-    router.push("/pages/admin-login");
+    router.push("/pages/admin/login");
   };
 
   return (
