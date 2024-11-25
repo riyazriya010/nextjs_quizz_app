@@ -18,7 +18,8 @@
 
 import Link from "next/link";
 
-export default function Quizz() {
+export default async function Quizz() {
+  await new Promise((resolve) => setTimeout(resolve, 3000))
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 text-gray-50">
       <h1 className="text-6xl font-extrabold mb-10 text-center drop-shadow-lg">

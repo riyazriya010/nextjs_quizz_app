@@ -1,14 +1,14 @@
 import { MongoClient } from 'mongodb';
 
 const client = new MongoClient(process.env.MONGODB_URI!);
-const dbName = 'next_js'; // Make sure this matches your DB name
+const dbName = 'next_js';
 
 let cachedClient: MongoClient | null = null;
 let cachedDb: any = null;
 
 export async function connectToDatabase() {
   if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb }; // Return cached connection if available
+    return { client: cachedClient, db: cachedDb }; // cached connection
   }
 
   // Connect to the database

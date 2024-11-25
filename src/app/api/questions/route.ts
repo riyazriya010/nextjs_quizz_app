@@ -1,40 +1,8 @@
-// import { NextResponse } from 'next/server';
-// import { connectToDatabase } from '@/app/lib/mongodb';
-
-// export async function GET(req: Request) {
-//   const { searchParams } = new URL(req.url);
-//   const category = searchParams.get('category') || 'Computer Related';
-//   const difficulty = searchParams.get('difficulty') || 'easy';
-
-//   try {
-//     // Connect to MongoDB
-//     const { db } = await connectToDatabase();
-
-//     // Query the database for the quiz data
-//     const quiz = await db
-//       .collection('quiz')
-//       .findOne({ category, 'questions.difficulty': difficulty });
-
-//     if (!quiz) {
-//       return NextResponse.json({ error: 'No quiz found for this category and difficulty' }, { status: 404 });
-//     }
-
-//     // Extract the questions from the quiz document
-//     const questions = quiz.questions[0].questions; // Get the questions array inside the first "questions" field
-
-//     // Return the questions as JSON response
-//     return NextResponse.json(questions);
-//   } catch (error) {
-//     console.error('Error fetching questions:', error);
-//     return NextResponse.json({ error: 'Error fetching questions' }, { status: 500 });
-//   }
-// }
-
-
-
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/app/lib/mongodb';
 
+
+// GET method to get data
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get('category') || 'Computer Related';
@@ -82,7 +50,7 @@ export async function GET(req: Request) {
 
 
 
-
+// POST method to store data
 export async function POST(req: Request) {
   try {
     // Parse the incoming data

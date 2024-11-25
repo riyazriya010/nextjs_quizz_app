@@ -2,38 +2,31 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState, } from "react";
+import ErrorPage from "./error";
 
 const Start = () => {
   const [category, setCategory] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
+  const [error, setError] = useState<Error | null>(null)
   const router = useRouter();
 
-  // Handler for clicking Start Game
+ 
   const handlerFunction = async () => {
-    // Construct the query parameters
+   
     const queryParams = new URLSearchParams({
-      category: category || 'Computer Related', // Default to 'Computer Related' if no category selected
-      difficulty: difficulty || 'easy', // Default to 'easy' if no difficulty selected
+      category: category || 'Computer Related',
+      difficulty: difficulty || 'easy',
     }).toString();
 
-    // Sending the data as query parameters to the API
-    try {
-      console.log('queryParams: ',queryParams)
-      const response = await fetch(`/api/questions?${queryParams}`, {
-        method: "GET", // Use GET since we're sending data in the URL
-      });
 
-      // const result = await response.json();
-      // if (response.ok) {
-      //   console.log("Data successfully fetched from API:", result);
-      // } else {
-      //   console.error("Failed to fetch data:", result);
-      // }
+    try {
+      const response = await fetch(`/api/questions?${queryParams}`, {
+        method: "GET",
+      });
 
       const result = await response.json();
       if (response.ok) {
-        // Store the questions and navigate to the quiz page
-        sessionStorage.setItem("questions", JSON.stringify(result)); // Use session storage to keep questions in session
+        sessionStorage.setItem("questions", JSON.stringify(result));
         router.push("/pages/user/questions-page");
       } else {
         console.error("Failed to fetch data:", result);
@@ -41,8 +34,15 @@ const Start = () => {
 
     } catch (error) {
       console.error("Error fetching data from API:", error);
+      if (error instanceof Error) {
+        setError(error)
+    }
     }
   };
+
+  if (error) {
+    return <ErrorPage error={error} />
+}
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-tr from-green-400 via-blue-500 to-purple-600 text-white p-6">
@@ -88,13 +88,6 @@ const Start = () => {
         Start Game
       </button>
 
-      {/* Optional: Display the selected values */}
-      {/* {category && difficulty && (
-        <div className="mt-8 text-lg text-white text-center">
-          <p className="font-semibold">Category: {category}</p>
-          <p className="font-semibold">Difficulty: {difficulty}</p>
-        </div>
-      )} */}
     </div>
   );
 };
